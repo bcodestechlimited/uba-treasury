@@ -6878,10 +6878,7 @@
               </div>
             </div>
             <div class="page-header-actions">
-              <button
-                class="btn btn-primary btn-sm"
-                onclick="showToast('Add User', 'Opening user creation modal...')"
-              >
+              <button class="btn btn-primary btn-sm" onclick="openModal('addUserModal')">
                 <svg
                   width="14"
                   height="14"
@@ -8590,6 +8587,87 @@
     </div>
     <!-- Toast Notification -->
 
+    <div class="modal-overlay" id="addUserModal">
+      <div class="modal" style="max-width: 500px">
+        <div class="modal-header">
+          <div>
+            <div class="modal-title">Add New User</div>
+            <div class="modal-subtitle">
+              Provision system access and assign RBAC roles
+            </div>
+          </div>
+          <button class="modal-close" onclick="closeModal('addUserModal')">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="newUserName"
+              placeholder="e.g. John Doe"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Email Address</label>
+            <input
+              type="email"
+              class="form-control"
+              id="newUserEmail"
+              placeholder="e.g. john.doe@uba.com"
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Assign Role</label>
+              <select class="form-control" id="newUserRole">
+                <option value="Retail Customer">Retail Customer</option>
+                <option value="Corporate Customer">Corporate Customer</option>
+                <option value="Treasury Ops (Maker)">Treasury Ops (Maker)</option>
+                <option value="Treasury Ops (Checker)">Treasury Ops (Checker)</option>
+                <option value="Branch Staff">Branch Staff</option>
+                <option value="System Administrator">System Administrator</option>
+                <option value="Auditor/Compliance">Auditor/Compliance</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Account Status</label>
+              <select class="form-control" id="newUserStatus">
+                <option value="Active">Active</option>
+                <option value="Pending Auth">Pending Auth</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="modal-footer"
+          style="display: flex; justify-content: flex-end; gap: 12px"
+        >
+          <button class="btn btn-secondary" onclick="closeModal('addUserModal')">
+            Cancel
+          </button>
+          <button class="btn btn-primary" onclick="submitNewUser()">Create User</button>
+        </div>
+      </div>
+    </div>
     <div
       id="toast"
       style="
@@ -8996,6 +9074,30 @@
 
           nav.appendChild(sec);
         });
+      }
+
+      // ===== USER MANAGEMENT ACTIONS =====
+      function submitNewUser() {
+        const nameInput = document.getElementById("newUserName");
+        const roleInput = document.getElementById("newUserRole");
+
+        if (!nameInput.value) {
+          showToast("Validation Error", "Please enter a valid user name.");
+          return;
+        }
+
+        // Close the modal
+        closeModal("addUserModal");
+
+        // Show a success message using the inputted data
+        showToast(
+          "User Provisioned",
+          `${nameInput.value} has been successfully added as a ${roleInput.value}.`,
+        );
+
+        // Clear the inputs for the next time the modal is opened
+        nameInput.value = "";
+        document.getElementById("newUserEmail").value = "";
       }
 
       // ===== NAVIGATION =====
